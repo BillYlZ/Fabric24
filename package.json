@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/BillYlZ/Fabric24/issues"
   },
-  "homepage": "https://github.com/BillYlZ/Fabric24#readme"
+  "homepage": "https://github.com/BillYlZ/Fabric24#readme",
+  "dependencies": {
+    "fabric": "^5.2.1"
+  }
 }
