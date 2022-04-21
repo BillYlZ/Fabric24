@@ -1,4 +1,4 @@
-module.exports = class ePosition {
+module.exports = class Position {
 
   left = -1;
   top = -2;

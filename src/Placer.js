@@ -1,7 +1,7 @@
-const position = require("./ePosition.js");
-const helper = require("./eHelper.js");
+const position = require("./Position.js");
+const helper = require("./Helper.js");
 
-module.exports = class ePlacer {
+module.exports = class Placer {
   type = "placer";
   name = null;
   position = null;
@@ -10,9 +10,7 @@ module.exports = class ePlacer {
   visible = true;
   selectable = false;
 
-  productName = null;
-  motivGruppeId = null;
-  motivName = null;
+ 
     
   constructor(opts) {
     if (opts) {
@@ -33,21 +31,7 @@ module.exports = class ePlacer {
       if (opts.hasOwnProperty('visible')) {
         this.visible = opts.visible;
       }
-      
-      if (opts.hasOwnProperty('elementType')) {
-        this.elementType = opts.elementType;
-      }
-
-      if (opts.hasOwnProperty('productName')) {
-        this.productName = opts.productName;
-      }
-      if (opts.hasOwnProperty('motivGruppeId')) {
-        this.motivGruppeId = opts.motivGruppeId;
-      }
-      if (opts.hasOwnProperty('elementType')) {
-        this.motivName = opts.motivName;
-      }
- 
+       
 
       this.helper = new helper({
         visible: false,

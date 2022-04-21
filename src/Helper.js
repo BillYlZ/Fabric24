@@ -1,4 +1,4 @@
-module.exports = class eHelper {
+module.exports = class Helper {
   visible = false; 
   clipImage = false;
   color = 'pink';
