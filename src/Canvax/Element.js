@@ -1,10 +1,10 @@
 'use strict'
 
-Helper.prototype = {}
-Helper.visible = false;  
-Helper.color = 'pink';
+Element.prototype = {}
+Element.OBJ = false;  
+Element.color = 'pink';
 
-function Helper(opts) {
+function Element(opts) {
   if (opts) {
     if (opts.hasOwnProperty('visible')) {
       this.setVisible(opts.visible);
@@ -15,12 +15,12 @@ function Helper(opts) {
   }
 }
 
-Helper.prototype.setVisible = function (visible) {
+Element.prototype.setVisible = function (visible) {
   this.visible = visible;
 }
 
-Helper.prototype.setColor = function (color) {
+Element.prototype.setColor = function (color) {
   this.color = color;
 }
 
-module.exports = Helper
+module.exports = Element

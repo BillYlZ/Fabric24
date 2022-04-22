@@ -1,56 +1,40 @@
-const position = require("./Position.js");
-const helper = require("./Helper.js");
+'use strict'
 
-module.exports = class Placer {
-  type = "placer";
-  name = null;
-  position = null;
-  opacity = 0.15;
-  color = 'red';
-  visible = true;
-  selectable = false;
+const Position = require("./Position.js");
+const Helper = require("./Helper.js");
 
- 
-    
-  constructor(opts) {
-    if (opts) {
-      if (opts.hasOwnProperty('name')) {
-        this.name = opts.name;
-      }
+Placer.prototype = {}
+Placer.visible = true;  
+Placer.color = 'red';
+Placer.opacity = 0.15;
+Placer.position = new Position();
+Placer.helper = new Helper();
 
-      if (opts.hasOwnProperty('position')) {
-        this.position = new position(opts.position);
-      } else {
-        this.position = new position();
-      }
-
-      if (opts.hasOwnProperty('color')) {
-        this.color = opts.color;
-      }
-
-      if (opts.hasOwnProperty('visible')) {
-        this.visible = opts.visible;
-      }
-       
-
-      this.helper = new helper({
-        visible: false,
-        stroke: this.color,
-        strokeWidth: 0.5
-      });
+function Placer(opts) {
+  if (opts) {
+    if (opts.hasOwnProperty('visible')) {
+      this.setVisible(opts.visible);
+    }
+    if (opts.hasOwnProperty('color')) {
+      this.setColor(opts.color);
     }
   }
- 
+}
 
-  setVisible(visible, visibleHelper=false, clipImage=false) {
-    this.visible = visible;
-    this.helper.setVisible(visibleHelper); 
-    this.helper.setClipImage(clipImage); 
-  }
+Placer.prototype.setVisible = function (visible) {
+  this.visible = visible;
+}
 
-  setPosition(pos) {
-    this.position.setPosition(pos);
-  }
+Placer.prototype.setHelperVisible = function (visible) {
+  this.helper.visible(visible);
+}
 
+Placer.prototype.setColor = function (color) {
+  this.color = color;
+}
 
-};
+Placer.prototype.setPosition = function (pos) {
+  this.position.setPosition(pos);
+}
+
+module.exports = Placer

@@ -1,54 +1,55 @@
-module.exports = class Position {
+'use strict'
 
-  left = -1;
-  top = -2;
-  width = -3;
-  height = -4;
-  centerX = 0;
-  centerY = 0;
+Position.prototype = {}
+Position.left = 0;
+Position.top = 0;
+Position.width = 0;
+Position.height = 0;
+Position.centerX = 0;
+Position.centerY = 0;
 
-  constructor(opts) {
-    if (opts) {
-      if (opts.hasOwnProperty('left')) {
-        this.left = opts.left;
-      }
-      if (opts.hasOwnProperty('top')) {
-        this.top = opts.top;
-      }
-      if (opts.hasOwnProperty('width')) {
-        this.width = opts.width;
-      }
-      if (opts.hasOwnProperty('height')) {
-        this.height = opts.height;
-      }
+function Position(opts) {
+  if (opts) {
+    if (opts.hasOwnProperty('left')) {
+      this.left = opts.left;
     }
-    this.calcCenter();
+    if (opts.hasOwnProperty('top')) {
+      this.top = opts.top;
+    }
+    if (opts.hasOwnProperty('width')) {
+      this.width = opts.width;
+    }
+    if (opts.hasOwnProperty('height')) {
+      this.height = opts.height;
+    }
   }
+  this.calcCenter();
+}
 
-  calcCenter() {
-    this.centerX = this.left + (this.width / 2);
-    this.centerY = this.top + (this.height / 2);
-  }
+Position.prototype.calcCenter = function () {
+  this.centerX = this.left + (this.width / 2);
+  this.centerY = this.top + (this.height / 2);
+}
 
+Position.prototype.getPosition = function (f = 1) {
+  this.calcCenter();
+  return {
+    left: this.left * f,
+    top: this.top * f,
+    width: this.width * f,
+    height: this.height * f,
+    centerX: this.centerX * f,
+    centerY: this.centerY * f,
+  };
+}
 
-  getPosition(f = 1) {
-    return {
-      left: this.left * f,
-      top: this.top * f,
-      width: this.width * f,
-      height: this.height * f,
-      centerX: (this.left + (this.width / 2)) * f,
-      centerY: (this.top + (this.height / 2)) * f,
-    };
-  }
+Position.prototype.setPosition = function (pos) {
+  this.left = pos.left;
+  this.top = pos.top;
+  this.width = pos.width;
+  this.height = pos.height;
+  this.calcCenter();
+}
+ 
 
-  setPosition(pos) {
-    
-    this.left = pos.left;
-    this.top = pos.top;
-    this.width = pos.width;
-    this.height = pos.height;
-    this.calcCenter();
-  }
-
-};
+module.exports = Position

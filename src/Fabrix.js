@@ -1,138 +1,118 @@
+'use strict'
+
+const Globals = require("./Globals.js");
+
 const Position = require("./Position.js");
 const Placer = require("./Placer.js");
 const Helper = require("./Helper.js");
 
-class FabrixVars {
-  static WIDTH_MOTIV = 100; // Urkunde/Scanner width = 100mm 
-  static WIDTH_PAPIER = 210; // Urkunde/Scanner width = 210mm 
-  static ZOOM_RATIO = 10; // 1-5 <> 1-100
-  static ZOOM_START = 30;
+function Fabrix() {}
+Fabrix.prototype = {}
 
-  static TYPE_PRODUCT = 'product';
-  static TYPE_MOTIV = 'motiv'; // fix motiv
-  static TYPE_TEXT = 'text';
-  static TYPE_IMAGE = 'image'; // bilder, logo, motiv...
+Fabrix.prototype.init = function (opts) {
+  this.opts = opts;
 
-  static TYPE_PRODUCT_PLACER = 'product_placer';
-  static TYPE_MOTIV_PLACER = 'motiv_placer';
-  static TYPE_MOTIV_MASK = 'motiv_mask';
-  static TYPE_EDIT = 'text_group';
-  static TYPE_TEXT_PLACER = 'text_placer';
+  //IDs für element 
+  this.opts.elements.forEach((element, i) => {
+    element.ID = i;
+    element.FABRIX = {};
+  });
 
-  COLOR_PRODUCT = 'gray';
-  COLOR_MOTIV = 'blue';
-  COLOR_TEXT = 'green';
+  return new Promise((resolve, reject) => {
+    this.refresh().then((values) => {
+      resolve('init');
+    });
+  });
 
-  COLOR_MOTIV_HELPER = 'black';
-  COLOR_PRODUCT_HELPER = 'orange';
 }
 
-class Fabrix {
 
-  constructor(opts) {
-    this.opts = opts;
+Fabrix.prototype.refresh = function () {
 
-    //IDs für element 
-    this.opts.elements.forEach((element, i) => {
-      element.ID = i;
-      element.FABRIX = {}; 
-    });
+  let promises = [];
 
-    this.refresh();
-    console.log(this.opts.elements);
-  }
+  this.opts.elements.forEach((item, i) => {
 
-  refresh() {
-    this.opts.elements.forEach((element, i) => {
-      this.refreshElement(element.ID);
-    });
-  }
-
-
-  refreshElement(ID) {
-    let element = this.getElementByID(ID);
-
-    if (element.type == FabrixVars.TYPE_PRODUCT) {
-      this.readImagePromise(element);    
-    } else if (element.type == FabrixVars.TYPE_MOTIV) {
-      this.readImagePromise(element);
-    } else if (element.type == FabrixVars.TYPE_TEXT) {
+    let element = this.getElementByID(item.ID);
+    if (element.type == Globals.TYPE_PRODUCT) {
+      promises.push(this.readImagePromise(element));
+    } else if (element.type == Globals.TYPE_MOTIV) {
+      promises.push(this.readImagePromise(element));
+    } else if (element.type == Globals.TYPE_TEXT) {
       //TODO
+      promises.push('text');
     }
+  });
 
-    element.FABRIX.helper = new Helper();
-
-    if (element.position) { 
-      let _placer = new Placer({
-        position: new Position(element.position)
-      });
-      element.FABRIX.placer = _placer;
-    }
-  }
-
-  readImagePromise(element) {
-    let _this = this;
-    return new Promise((resolve, reject) => {
-      _this.readImage(element).then((result) => {
-        resolve();
-      });
-    });
-  }
-
-  async readImage(element) {
-    let _this = this;
-    await this.getBase64FromUrl(element.url).then((imageBlob) => {
-      _this.setImageBlob(element.ID, imageBlob);
-    });
-  }
-
-  setImageBlob(ID, imageBlob) {
-    this.opts.elements.forEach(element => {
-      if (element.ID == ID) {
-        //                                            element.FABRIX.imageBlob =  imageBlob;
-      }
-    });
-  }
-
-  async getBase64FromUrl(url) {
-    const data = await fetch(url);
-    const blob = await data.blob();
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(blob);
-      reader.onloadend = () => {
-        const base64data = reader.result;
-        resolve(base64data);
-      };
-    });
-  }
-
-  getElementByType(_type) {
-    let rElement = null;
-
-    this.opts.elements.forEach(element => {
-      if (element.type == _type) {
-        rElement = element;
-      }
-    });
-    return rElement;
-  }
-
-  getElementByID(_ID) {
-    let rElement = null;
-
-    this.opts.elements.forEach(element => {
-      if (element.ID == _ID) {
-        rElement = element;
-      }
-    });
-    return rElement;
-  }
+  
+  return Promise.all(promises).then((values) => {
+    console.log(values);
+  });
 
 }
 
+Fabrix.prototype.readImagePromise = function (element) {
+  let _this = this;
 
-module.exports = {
-  Fabrix,
-  FabrixVars
+  console.log('readImagePromise');
+  return new Promise((resolve, reject) => {
+    _this.readImage(element).then((result) => {
+      console.log('readImagePromise-resolve');
+      resolve(element.ID);
+    });
+  });
 }
+
+
+Fabrix.prototype.readImage = async function (element) {
+  let _this = this;
+  await this.getBase64FromUrl(element.url).then((imageBlob) => {
+    element.FABRIX.imageBlob = imageBlob;
+  });
+}
+
+
+
+Fabrix.prototype.getBase64FromUrl = async function (url) {
+  const data = await fetch(url);
+  const blob = await data.blob();
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onloadend = () => {
+      const base64data = reader.result;
+      resolve(base64data);
+    };
+  });
+}
+
+
+Fabrix.prototype.getElementByType = function (_type) {
+  let rElement = null;
+
+  this.opts.elements.forEach(element => {
+    if (element.type == _type) {
+      rElement = element;
+    }
+  });
+  return rElement;
+}
+
+Fabrix.prototype.getElementByID = function (_ID) {
+  let rElement = null;
+
+  this.opts.elements.forEach(element => {
+    if (element.ID == _ID) {
+      rElement = element;
+    }
+  });
+  return rElement;
+}
+
+
+Fabrix.prototype.setUI = function (opts) {}
+
+Fabrix.prototype.renderAll = function (opts) {}
+
+
+module.exports = Fabrix
