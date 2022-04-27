@@ -12,10 +12,21 @@ Globals.TYPE_PRODUCT = 'product';
 Globals.TYPE_MOTIV = 'motiv'; // fix motiv
 Globals.TYPE_TEXT = 'text';
 Globals.TYPE_IMAGE = 'image'; // bilder, logo, motiv...
+
+Globals.TYPE_PLACER = 'placer';
+Globals.TYPE_HELPER = 'helper';
+
+
 Globals.TYPE_PRODUCT_PLACER = 'product_placer';
 Globals.TYPE_MOTIV_PLACER = 'motiv_placer';
 Globals.TYPE_MOTIV_MASK = 'motiv_mask';
 Globals.TYPE_EDIT = 'text_group';
 Globals.TYPE_TEXT_PLACER = 'text_placer';
+
+
+Globals.COLOR_PLACER_PRODUCT = 'black';
+Globals.COLOR_PLACER_MOTIV = 'red';
+Globals.COLOR_PLACER_TEXT = 'green';
+
 
 module.exports = Globals

@@ -1,10 +1,8 @@
 'use strict'
 
 const Globals = require("./Globals.js");
-
 const Position = require("./Position.js");
-const Placer = require("./Placer.js");
-const Helper = require("./Helper.js");
+
 
 function Fabrix(opts = null)  {
   if (!opts) {
